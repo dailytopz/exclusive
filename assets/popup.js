@@ -60,16 +60,17 @@
     const { bd } = built;
  
     // Your custom behavior: both buttons redirect
-    bd.querySelector("#age-yes").addEventListener("click", () => {
-      window.location.href = REDIRECT;
-    });
-    bd.querySelector("#age-no").addEventListener("click", () => {
-      window.location.href = REDIRECT;
-    });
+    bd.querySelector("#age-yes").addEventListener("click", function(){
+    window.location.href = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]"; // change to your target page
+  });
+                                                
+  bd.querySelector('#age-no').addEventListener('click', function(){
+    window.location.href = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]"; // change to your target page
   };
 })();
  
 
  
+
 
 
